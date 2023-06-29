@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -euo pipefail
+
+git remote prune origin
+
+get_branches() {
+	git branch -vv | grep -F ': gone]' | sed 's/^\*\s*//' | awk '{print $1}'
+}
+
+set +e
+branches=$(get_branches)
+set -e
+
+if [[ -n "$branches" ]]; then
+	echo "Will delete branches: "
+	for branch in $branches; do
+		echo "  ${branch}"
+	done
+	echo
+
+	while true; do
+		read -rp "Delete? (y/n) "
+		case $REPLY in
+			Y|y)
+				git branch -D $branches
+				break
+				;;
+			N|n)
+				break
+				;;
+			*)
+				echo "Please enter 'y' or 'n'"
+				;;
+		esac
+	done
+else
+	echo "Nothing to do"
+fi
+

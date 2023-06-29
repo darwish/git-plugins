@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -euo pipefail
+
+echo "Checking out master..."
+git checkout master
+echo
+
+echo "Pulling from master..."
+git pull
+echo
+
+echo "Purging branches..."
+git purge
