@@ -17,6 +17,13 @@ $ git purge
 $ git refresh
 ```
 
+If Plugins are not proposed by git autocompletion, one way to make them available is to create aliases:
+
+```
+$ git config --global alias.purge purge
+$ git config --global alias.refresh refresh
+```
+
 ## git-purge
 
 `git-purge` prunes remote refs from the origin, and then finds the corresponding local branches and deletes them.
