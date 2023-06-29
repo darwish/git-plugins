@@ -9,7 +9,7 @@ Git will automatically find any commands on your path with the name `git-*` and 
 
 ```bash
 $ git clone https://github.com/darwish/git-plugins
-$ cd git-plugins $(pwd)/git-* /usr/local/bin/
+$ cd git-plugins
 $ sudo ln -s $(pwd)/git-* /usr/local/bin/
 
 # Usage:
