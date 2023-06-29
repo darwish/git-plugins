@@ -2,6 +2,16 @@
 
 set -euo pipefail
 
+force=
+if [[ "${1:-}" == "-f" ]]; then
+    force=1
+fi
+
+dryrun=
+if [[ "${1:-}" == "-d" ]]; then
+    dryrun=1
+fi
+
 git remote prune origin
 
 get_branches() {
@@ -12,28 +22,45 @@ set +e
 branches=$(get_branches)
 set -e
 
-if [[ -n "$branches" ]]; then
-	echo "Will delete branches: "
-	for branch in $branches; do
-		echo "  ${branch}"
-	done
-	echo
+if [[ "$dryrun" -eq 1 ]]; then
+    if [[ -n "$branches" ]]; then
+        for branch in $branches; do
+            echo "  ${branch}"
+        done
+    fi
+    exit
+fi
 
-	while true; do
-		read -rp "Delete? (y/n) "
-		case $REPLY in
-			Y|y)
-				git branch -D $branches
-				break
-				;;
-			N|n)
-				break
-				;;
-			*)
-				echo "Please enter 'y' or 'n'"
-				;;
-		esac
-	done
+if [[ -n "$branches" ]]; then
+    if [[ "$force" -eq 1 ]]; then
+        echo "Deleting branches: "
+        for branch in $branches; do
+            echo "  ${branch}"
+        done
+        git branch -D $branches
+    else
+        echo "Will delete branches: "
+        for branch in $branches; do
+            echo "  ${branch}"
+        done
+        echo
+
+        while true; do
+            read -rp "Delete? (y/n) "
+            case $REPLY in
+                Y|y)
+                    git branch -D $branches
+                    break
+                    ;;
+                N|n)
+                    break
+                    ;;
+                *)
+                    echo "Please enter 'y' or 'n'"
+                    ;;
+            esac
+        done
+    fi
 else
 	echo "Nothing to do"
 fi

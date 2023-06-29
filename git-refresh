@@ -2,13 +2,22 @@
 
 set -euo pipefail
 
-echo "Checking out master..."
-git checkout master
-echo
+# If we're not on master, don't switch to master if there's nothing to purge
+# If we are on master, we want to pull in updates
+if [[ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]]; then
+    if [[ -z "$(git purge -d)" ]]; then
+        echo "Nothing to do"
+        exit
+    fi
+
+    echo "Checking out master..."
+    git checkout master
+    echo
+fi
 
 echo "Pulling from master..."
 git pull
 echo
 
 echo "Purging branches..."
-git purge
+git purge "$@"
