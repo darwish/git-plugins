@@ -2,20 +2,26 @@
 
 set -euo pipefail
 
-# If we're not on master, don't switch to master if there's nothing to purge
-# If we are on master, we want to pull in updates
-if [[ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]]; then
+branch=master
+if [[ "${1:-}" == "-b" ]]; then
+    branch=$2
+    shift 2
+fi
+
+# If we're not on $branch, don't switch to $branch if there's nothing to purge
+# If we are on $branch, we want to pull in updates
+if [[ "$(git rev-parse --abbrev-ref HEAD)" != "$branch" ]]; then
     if [[ -z "$(git purge -d)" ]]; then
         echo "Nothing to do"
         exit
     fi
 
-    echo "Checking out master..."
-    git checkout master
+    echo "Checking out $branch..."
+    git checkout "$branch"
     echo
 fi
 
-echo "Pulling from master..."
+echo "Pulling from $branch..."
 git pull
 echo
 

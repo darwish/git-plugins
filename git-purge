@@ -15,7 +15,7 @@ fi
 git remote prune origin
 
 get_branches() {
-	git branch -vv | grep -F ': gone]' | sed 's/^\*\s*//' | awk '{print $1}'
+    git branch -vv | grep -F ': gone]' | sed 's/^\*\s*//' | awk '{print $1}'
 }
 
 set +e
@@ -62,6 +62,6 @@ if [[ -n "$branches" ]]; then
         done
     fi
 else
-	echo "Nothing to do"
+    echo "Nothing to do"
 fi
 
