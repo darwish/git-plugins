@@ -15,7 +15,7 @@ fi
 git remote prune origin
 
 get_branches() {
-    git branch -vv | grep -F ': gone]' | sed 's/^\*\s*//' | awk '{print $1}'
+    git branch -vv | grep -F ': gone]' | grep -v '^\+' | sed 's/^\*\s*//' | awk '{print $1}'
 }
 
 set +e
